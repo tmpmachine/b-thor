@@ -622,7 +622,7 @@ let ui = (function() {
 
     compoNotif.Init();
 
-    preferences.loadSettings();
+    // preferences.loadSettings();
     ui.openNewTab();
     compoFileTab.InitTabFocusHandler();
     window.setTimeout(() => { 
@@ -652,8 +652,6 @@ let ui = (function() {
       modal.querySelector('.Btn-close').addEventListener('click', ui.ToggleModalByClick);
     }
     
-    DOMEvents.Init();
-
   }
 
   return SELF;

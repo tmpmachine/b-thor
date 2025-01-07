@@ -1,4 +1,5 @@
 import { GetEnv } from './environment.js';
+import { loadScripts } from './script-loader.js';
 
 let environment = GetEnv();
 let ACE_CDN_BASEPATH = '/assets/js/packages/ace-builds/src-min-noconflict';
@@ -9,13 +10,15 @@ window.environment = environment;
 window.activeWorkspace = activeWorkspace;
 window.ACE_CDN_BASEPATH = ACE_CDN_BASEPATH;
 
-app.loadFiles([
+loadScripts([
   {
     urls: [
-      'views/modals.html',
-      'views/templates.html',
+      // 'views/modals.html',
+      // 'views/templates.html',
       "assets/js/view-state-util.js",
       "js/view-states-map.js",
+      "js/factories/dialog-factory.js",
+      "js/libs/windog.js",
     ],
     callback: function() {
       viewStateUtil.Init(viewStatesMap);
@@ -23,6 +26,7 @@ app.loadFiles([
   },
   {
     urls: [
+      "js/uis/dialogs.js",
       "assets/js/idb@7/umd.js",
       "js/components/firebase-hosting-component.js",
       "assets/js/fflate.js",
@@ -40,7 +44,7 @@ app.loadFiles([
       "js/utils/helper-utils.js",
       "js/components/extension.js",
       "js/components/preferences.js",
-      "js/components/modal.js",
+      // "js/components/modal.js",
       "js/components/clipboard-component.js",
       "js/require/lsdb.js",
     ],
@@ -74,7 +78,7 @@ app.loadFiles([
       "js/uis/file-tab-ui.js",
       "js/uis/tree-explorer-ui.js",
       "js/components/notif-component.js",
-      "js/components/notifier.js",
+      // "js/components/notifier.js",
       `${ACE_CDN_BASEPATH}/ace.js`,
       "js/components/file-tab-component.js",
       "assets/js/packages/@isomorphic-git/lightning-fs/lightning-fs.min.js",
@@ -93,12 +97,13 @@ app.loadFiles([
   {
     urls: [
       "js/components/session-manager-component.js",
-      "js/dom-events.js",
-      "css/file-tree.css",
+      "js/events-map.js",
+      "js/libs/dom-events.js",
       "js/components/file-tree-component.js",
     ],
     callback: function() {
       ui.Init();
+      DOMEvents.Listen(eventsMap)
     },
   },
   {

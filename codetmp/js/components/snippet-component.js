@@ -254,6 +254,8 @@ let compoSnippet = (function() {
       }
     }
 
+    return;
+
     await waitUntil(() => {
       return typeof(ace.require('ace/snippets').snippetManager == 'object')
     }, 200)
