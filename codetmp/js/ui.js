@@ -3,7 +3,10 @@ let ui = (function() {
   let $ = document.querySelector.bind(document);
   let $$ = document.querySelectorAll.bind(document);
 
+  // # self
   let SELF = {
+    HandleFirstRenderEditor,
+    NavigateView,
     SetActiveWorkspace,
     GetActiveWorkspace,
     TaskChangeWorkspaceByIndex,
@@ -38,9 +41,7 @@ let ui = (function() {
     confirmClearData,
     switchTab,
     openNewTab,
-    toggleAutoSync,
     toggleSaveToken,
-    ToggleHomepageSetting,
     ToggleHomepage,
     toggleActionMenu,
     toggleInsertSnippet,
@@ -93,6 +94,44 @@ let ui = (function() {
 
   }
 
+  // # function
+
+  // # render editor
+  function HandleFirstRenderEditor() {
+    ui.openNewTab();
+    compoFileTab.InitTabFocusHandler();
+    
+    window.setTimeout(() => { 
+      resizeEditor();
+    }, 350)
+    
+    changeExplorerView(settings.data.explorer.view);
+
+
+    fileManager.TaskOnStorageReady().then(async () => {
+      let sessionData = await compoSessionManager.TaskRestoreSession();
+      if (sessionData && sessionData.activeWorkspace == 2) {
+        ui.SetActiveWorkspace(sessionData.activeWorkspace);
+      }
+
+      let activeWorkspace = GetActiveWorkspace();
+      await ui.TaskChangeWorkspaceByIndex(activeWorkspace)
+
+      if (sessionData) {
+        await compoSessionManager.TaskRestoreOpenFileHandlers(sessionData);
+      }
+    });
+  }
+
+  function NavigateView(evt) {
+    let target = evt.target.closest('[data-onclick]').dataset.target;
+    navigateViewByName(target);
+  }
+
+  function navigateViewByName(name) {
+    viewStateRoot.Update_({ name });
+  }
+
   function RevokeAccess() {
     let isConfirm = window.confirm('This will log you out and you will need to grant app permission again. Continue?');
     if (!isConfirm) return;
@@ -132,8 +171,15 @@ let ui = (function() {
     alert('Session created. Save this URL for later.')
   }
 
-  function ToggleModalByClick() {
-    ToggleModal(this.dataset.target);
+  function ToggleModalByClick(evt) {
+    let target = evt.target.closest('[data-onclick]').dataset.target;
+    
+    switch (target) {
+      case 'settings': dialogSettings.Show_(); break;
+      case 'account': dialogAccount.Show_(); break;
+      default: ToggleModal(target);
+    }
+
   }
 
   function ToggleModal(name) {
@@ -299,14 +345,13 @@ let ui = (function() {
     $('.btn-file-action')?.classList.toggle('w3-hide', isHide);
   }
 
-  function setGitToken() {
-    ToggleModal('settings');
-    modal.prompt('Personal access token').then(token => {
-      if (token !== null) {
-        gitRest.setToken(token);
-        aww.pop('Personal access token has been set.');
-      }
-    });
+  async function setGitToken() {
+    let userVal = await windog.prompt('Personal access token');
+    if (userVal === null) return;
+    
+    gitRest.setToken(userVal);
+
+    windog.alert('Personal access token has been set.')
   }
   
   function toggleActionMenu(targetId, useCallback, targetNode) {
@@ -434,28 +479,16 @@ let ui = (function() {
     compoFileTab.newTab(position, data);
   }
   
-  function toggleAutoSync() {
-    settings.data.autoSync = !settings.data.autoSync;
-    settings.save();
-    $('#check-auto-sync').checked = settings.data.autoSync ? true : false;
-  }
-
   function toggleSaveToken() {
     settings.data.saveGitToken = !settings.data.saveGitToken;
     settings.save();
     $('#check-save-token').checked = settings.data.saveGitToken ? true : false;
   }
 
-  function ToggleHomepageSetting() {
-    settings.data.showHomepage = !settings.data.showHomepage;
-    settings.save();
-    $('#check-show-homepage').checked = settings.data.showHomepage ? true : false;
-  }
-
   function ToggleHomepage() {
-    $('#sidebar').classList.toggle('HIDE');
-    $('#in-home').classList.toggle('active');
-    $('#main-editor').classList.toggle('editor-mode');
+    // $('#sidebar').classList.toggle('HIDE');
+    // $('#in-home').classList.toggle('active');
+    // $('#main-editor').classList.toggle('editor-mode');
     if ($('#in-my-files').classList.contains('active')) {
       $('#btn-menu-my-files').click();
     }
@@ -472,11 +505,12 @@ let ui = (function() {
     });
   }
 
-  function confirmClearData() {
-    modal.confirm('This will delete all Codetmp saved files & folders on current browser. Continue?', false).then(async () => {
-      await fileManager.TaskClearStorage();
-      location.reload();
-    });
+  async function confirmClearData() {
+    let isConfirm = await windog.confirm('This will delete all Codetmp saved files & folders on current browser. Continue?');
+    if (!isConfirm) return;
+
+    await fileManager.TaskClearStorage();
+    location.reload();
   }
   
   function alert({text, isPersistent = false, timeout}) {
@@ -606,7 +640,7 @@ let ui = (function() {
     // prevent content shift by material icons
     new Promise(resolve => {
       let interval = setInterval(() => {
-        if (document.querySelector('._btnMenuPreview').firstElementChild.scrollWidth > 50) return;
+        // if (document.querySelector('._btnMenuPreview').firstElementChild.scrollWidth > 50) return;
         clearInterval(interval);
         resolve();
       }, 100);
@@ -615,36 +649,30 @@ let ui = (function() {
     });
   }
 
-  function Init() {
+  // # init
+  async function Init() {
     
+    // restore homepage check setting
+    {
+      let isShowHomepageFirst = servUserPreferences.GetItem('showHomepageFirst');
+      $('._chkHomepage').checked = isShowHomepageFirst;
+
+      if (!isShowHomepageFirst) {
+        await new Promise(resolve => window.setTimeout(resolve, 150));
+        navigateViewByName(S.editor);
+      }
+    }
+
     waitMaterialIconsOverflow();
     attachListeners();
 
     compoNotif.Init();
 
-    preferences.loadSettings();
-    ui.openNewTab();
-    compoFileTab.InitTabFocusHandler();
-    window.setTimeout(() => { 
-      ui.resizeEditor();
-    }, 350)
+    // preferences.loadSettings();
     
     // initMenuBar();
-    changeExplorerView(settings.data.explorer.view);
-
-    fileManager.TaskOnStorageReady().then(async () => {
-      let sessionData = await compoSessionManager.TaskRestoreSession();
-      if (sessionData && sessionData.activeWorkspace == 2) {
-        ui.SetActiveWorkspace(sessionData.activeWorkspace);
-      }
-
-      let activeWorkspace = GetActiveWorkspace();
-      await ui.TaskChangeWorkspaceByIndex(activeWorkspace)
-
-      if (sessionData) {
-        await compoSessionManager.TaskRestoreOpenFileHandlers(sessionData);
-      }
-    });
+    
+    
 
     for (let modal of $$('.modal-window')) {
       modal.classList.toggle('transition-enabled', true);
@@ -652,8 +680,6 @@ let ui = (function() {
       modal.querySelector('.Btn-close').addEventListener('click', ui.ToggleModalByClick);
     }
     
-    DOMEvents.Init();
-
   }
 
   return SELF;

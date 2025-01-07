@@ -1,0 +1,132 @@
+<template class="_dialogSettings">
+  [dialog .wg-windog .reset
+  <!-- # settings -->
+    [ .backdrop]
+    <div class="inner">
+    [ .wrapper .skin .skin-dialog-settings
+      
+      <div class="Header no-select d-flex justify-content-between">
+        [h1 'Settings' .title]
+        <button class="material-icons toggler close-btn" data-onclick="close-dialog">close</button>
+      </div>
+      <div class="Content">
+        
+        <section>
+          <h6 style="font-weight:bold;">Preview</h6>
+          <p>
+            <label><input name="divlessHTMLEnabled" class="autofocus w3-check _settings" data-onchange="apply-config" type="checkbox"/> Convert Divless HTML format (.html files only)</label>
+          </p>
+          <p>
+            <label><input name="linkPreviewWindowProcess" class="autofocus w3-check _settings" data-onchange="apply-config" type="checkbox"/> Link preview window process (might freeze editor while in debug mode)</label>
+          </p>
+          [small 'JavaScript (Terser) : ']
+          [p
+            <label><input name="minifyJs" class="autofocus w3-check _settings" data-onchange="apply-config" type="checkbox"/> Minify</label>
+          ]
+        </section>
+        <hr/>
+        <section>
+          <h6 style="font-weight:bold;">File Manager</h6>
+          <p>
+            <label><input name="divlessHTMLFSEnabled" class="autofocus w3-check _settings" data-onchange="apply-config" type="checkbox"/> Convert Divless HTML format on file save (.html files only)</label>
+          </p>
+        </section>
+        <hr/>
+        <section>
+          <h6 style="font-weight:bold;">Editor</h6>
+          <p>
+            <label><input name="emmetEnabled" class="w3-check _settings" data-onchange="apply-config" type="checkbox"/> Emmet Support</label>
+          </p>
+          <p>
+            <label><input name="autoCompleteEnabled" class="w3-check _settings" data-onchange="apply-config" type="checkbox"/> Autocompletion</label>
+          </p>
+        </section>
+        <hr/>
+        <section>
+          <h6 class="w3-hide" style="font-weight:bold;">Google Drive Sync</h6>
+          <p>
+          <label><input name="autoSync" class="w3-check _settings" type="checkbox" data-onchange="apply-config" checked/> Automatically sync files and folders</label>          
+          </p>
+        </section>
+        <hr/>
+  
+        <!-- work offline -->
+        <section>
+          <h6 style="font-weight:bold;">Updates & Offline Access</h6>
+          <button type="button" class="btn-style-1" style="width:auto" onclick="pwaCacher.update()">Check for updates</button>
+          <button type="button" class="btn-style-1" style="width:auto" onclick="pwaCacher.removeUpdate()">Remove App Cache</button>
+          [p '*) Removing app cache will disable offline access until you update the app manually by clicking on <b>Check for updates</b> button.']
+        </section>
+        <hr/>
+  
+        <section>
+          <h6 style="font-weight:bold;">File Storage</h6>
+          <p>Delete locally saved files & folders (doesn't affect your files on Google Drive).</p>
+          <button class="btn-style-1  toggler" style="width:auto" data-onclick="clear-data">Clear data</button>
+        </section>
+        <hr/>
+        <section>
+          <h6 style="font-weight:bold;">GitHub Token</h6>
+          <p>Set personal access token to get higher rate limit. Valid until this application is closed.</p>
+          <p><label><input id="check-save-token" class="w3-check" type="checkbox" oninput="ui.toggleSaveToken()"/> Store token in browser storage</label></p>
+          <button class="btn-style-1" style="width:auto" data-onclick="set-git-token">Set token</button>
+        </section>
+      </div>
+
+    ]
+    </div>
+  ]
+</template>
+
+<template class="_dialogAccount">
+  [dialog .wg-windog .reset
+  <!-- # account -->
+    [ .backdrop]
+    <div class="inner">
+    [ .wrapper .skin .skin-dialog-settings
+      
+      <div class="Header no-select d-flex justify-content-between">
+        [h1 'My Account' .title]
+        <button class="material-icons toggler close-btn" data-onclick="close-dialog">close</button>
+      </div>
+      <div class="Content">
+          <section>
+    
+            <!-- Backup and restore -->
+            [h3 'Sync to Google Drive']
+            [
+              [ .d-flex .flex-wrap {gap:0.25rem}
+                [ data-view-group="features-cloud" data-view-name-not="authorized"
+                  <!-- authorize -->
+                  [btn 'Authorize' .btn-style-1 data-onclick="authorize" .btn .btn-style-1]
+                ]
+              ]
+              [s #txt-backup-status]
+              [s #txt-restore-status]
+            ][ {mb:0.5rem}]
+    
+            <p class="w3-small unauthorized">(!) Your files are <b>currently stored locally</b> in browser storage. Sign in to synchronize with Google Drive across devices.</p>
+            <div id="g-signin2" class="unauthorized"></div>
+            <div data-view-group="features-cloud" data-view-name="authorized">
+              <!-- sign out, revoke token -->
+              <button class="btn-style-1 " style="width:auto" data-onclick="sign-out">Sign out</button>
+              <button class="btn-style-1" style="width:auto" data-onclick="revoke-access">Revoke access</button>
+            </div>
+            <hr/>
+            <p class="w3-small">By using <b>Codetmp</b>, you're considered agreed to terms and condition written on articles below :</p>
+            <ul>
+              <li>
+                 <u><a target="_blank" href="pages/TOS.html" style="font-weight:bold;">Terms of Service</a></u>
+              </li>
+              <li>
+                 <u><a href="pages/PP.html" target="_blank" style="font-weight:bold;">Privacy Policy</a></u>
+              </li>
+            </ul>
+            </section>
+        </div>
+
+    ]
+    </div>
+  ]
+</template>
+

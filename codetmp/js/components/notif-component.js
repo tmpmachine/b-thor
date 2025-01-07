@@ -30,7 +30,7 @@ let compoNotif = (function() {
   }
 
   function Init() {
-    local.notifInstance = Notifier($('#tmp-notif'), $('#notif-list'));
+    // local.notifInstance = Notifier($('#tmp-notif'), $('#notif-list'));
   }
   
   return SELF;

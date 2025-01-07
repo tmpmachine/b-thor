@@ -1,0 +1,3 @@
+let S = {
+    editor: 'editor',
+};

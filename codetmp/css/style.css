@@ -17,6 +17,17 @@
 .void{display:flex}
 .void-tenth{margin-bottom:0.1rem}.void-quarter{margin-bottom:0.25rem}.void-half{margin-bottom:0.5rem}.void-full,.void-1x{margin-bottom:1rem}.void-2x{margin-bottom:2rem}
 
+.gap-25{gap:0.25rem}.gap-50{gap:0.5rem}.gap-75{gap:0.75rem}.gap-1{gap:1rem}.gap-2{gap:2rem}
+
+.void-25{padding-bottom:0.25rem}.void-50{padding-bottom:0.5rem}.void-1{padding-bottom:1rem}.void-2{padding-bottom:2rem}.void-3{padding-bottom:3rem}
+
+.is-hidden,.obsoletes{display:none!important;height:0!important;width:0!important;overflow:hidden!important;visibility:hidden!important;position:absolute!important}
+
+.reset{
+  h1,h2,h3,h4,h5,
+  hr,pre,p,input{margin:0}
+}
+
 /* fallback */
 @font-face {
   font-family: 'Material Icons Round';
@@ -211,9 +222,6 @@ html,body{height:100%;}
 	display: none!important;
 }
 
-#in-home{
-  background: #16191d;
-}
 #status-bar {
   background: #16191d;
   grid-row: 2;
@@ -858,4 +866,4 @@ i.Btn-close.material-icons.w3-button.w3-hover-none:hover {
 }
 
 /* view utils : views initial state */
-[data-view-name] { display: none; }
+/* [data-view-name] { display: none; } */

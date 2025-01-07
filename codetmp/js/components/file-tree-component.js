@@ -1,22 +1,18 @@
-(function() {
-  'use strict';
-  
+let compoFileTree = (function() {
+
   let $ = document.querySelector.bind(document);
   let $$ = document.querySelectorAll.bind(document);
-
-  app.registerComponent('fileTree', FileTreeComponent());
-
-  function FileTreeComponent() {
-
-    // local variable
-    const _ = {
-
-    };
-
+  
     // component interface 
     const SELF = {
       workspaceId: -1, // folder FID
       reset: Reset,
+      Init,
+    };
+  
+    // # local
+    const _ = {
+
     };
 
     SELF.appendFolder = function(file) {
@@ -529,20 +525,18 @@
       }
     };
 
-    return SELF;
-  }
-
-
-  app.getComponent('fileTree').then(async (ft) => {
-    // await fileManager.TaskOnStorageReady();
-    // await ft.reload();
-    ft.attachListener();
-    ft.listLocalWorktree();
-    if (settings.data.explorer.tree) {
-      document.body.classList.toggle('--tree-explorer', true);
+    function Init() {
+      // await fileManager.TaskOnStorageReady();
+      // await ft.reload();
+      ft.attachListener();
+      ft.listLocalWorktree();
+      if (settings.data.explorer.tree) {
+        document.body.classList.toggle('--tree-explorer', true);
+      }
+      $('.tree-explorer').classList.toggle('d-none', false);
+      $('.tree-explorer-btn-expand').classList.toggle('d-none', false);
     }
-    $('.tree-explorer').classList.toggle('d-none', false);
-    $('.tree-explorer-btn-expand').classList.toggle('d-none', false);
-  });
+
+    return SELF;
 
 })();

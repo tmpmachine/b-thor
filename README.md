@@ -1,6 +1,10 @@
 # Codetmp
 Web IDE for serverless plain HTML, CSS, and JavaScript development.
 
+## Running the Project
+
+
+
 ## Core Features
 1. Built-in [divless-HTML](#divless-html-format) format converter, write less `<div>` tags.
 2. Local files editing (requires browser that supports the **File System Access API**).

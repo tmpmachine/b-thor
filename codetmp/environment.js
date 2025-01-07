@@ -1,5 +1,5 @@
 let environment = {
-    activeEnvironment: 'production', // production or development
+    activeEnvironment: 'development', // production or development
     
     production: {
         previewUrl: 'https://preview.codetmp7.dev/',

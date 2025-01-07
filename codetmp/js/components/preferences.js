@@ -7,8 +7,17 @@ const preferences = (function() {
   let $$ = document.querySelectorAll.bind(document);
   
   let SELF = {
-
+    ApplyCheckboxSettings,
+    RestoreSettings,
   };
+
+  function RestoreSettings(dialogEl) {
+    for (let input of dialogEl.querySelectorAll('._settings')) {
+      let key = input.name;
+      input.checked = servUserPreferences.GetItem(key);
+      applyEditorSettings(key, input.checked);
+    }
+  }
 
   SELF.toggleWordWrap = function() {
     if (fileTab[activeTab]) {
@@ -48,6 +57,17 @@ const preferences = (function() {
     settings.save();
   }
 
+  function ApplyCheckboxSettings(evt) {
+    let target = evt.target;
+    let key = target.name;
+
+    applyEditorSettings(key, target.checked);
+
+    servUserPreferences.SetItem(key, target.checked);
+
+    servUserPreferences.Save_();
+  }
+
   function initEditorSettings() {
     for (let input of $$('.input-settings')) {
       let key = input.dataset.name;
@@ -58,14 +78,10 @@ const preferences = (function() {
   }
 
   SELF.loadSettings = function() {
-    initEditorSettings();
-    $('#check-show-homepage').checked = settings.data.showHomepage ? true : false;
-    $('#check-auto-sync').checked = settings.data.autoSync ? true : false;
+    // initEditorSettings();
+    // $('#check-auto-sync').checked = settings.data.autoSync ? true : false;
     $('#check-save-token').checked = settings.data.saveGitToken ? true : false;
 
-    if (!$('#check-show-homepage').checked) {
-      ui.ToggleHomepage();
-    }
   };
 
   SELF.loadEnvironmentSettings = function(file) {

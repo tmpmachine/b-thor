@@ -1,4 +1,5 @@
 import { GetEnv } from './environment.js';
+import { loadScripts } from './script-loader.js';
 
 let environment = GetEnv();
 let ACE_CDN_BASEPATH = '/assets/js/packages/ace-builds/src-min-noconflict';
@@ -9,20 +10,34 @@ window.environment = environment;
 window.activeWorkspace = activeWorkspace;
 window.ACE_CDN_BASEPATH = ACE_CDN_BASEPATH;
 
-app.loadFiles([
+loadScripts([
   {
     urls: [
-      'views/modals.html',
-      'views/templates.html',
-      "assets/js/view-state-util.js",
-      "js/view-states-map.js",
+      "js/factories/view-state-factory.js",
+      "js/libs/dom-states.js",
+    ],
+  },
+  {
+    urls: [
+      // 'views/modals.html',
+      // 'views/templates.html',
+      // "assets/js/view-state-util.js",
+      // "js/view-states-map.js",
+      "js/uis/view-states.js",
+      "js/factories/dialog-factory.js",
+      "js/libs/windog.js",
+      "js/events-map.js",
+      "js/libs/dom-events.js",
+      "js/types.js",
     ],
     callback: function() {
-      viewStateUtil.Init(viewStatesMap);
+      viewStateRoot.Update_();
+      // viewStateUtil.Init(viewStatesMap);
     },
   },
   {
     urls: [
+      "js/uis/dialogs.js",
       "assets/js/idb@7/umd.js",
       "js/components/firebase-hosting-component.js",
       "assets/js/fflate.js",
@@ -40,7 +55,7 @@ app.loadFiles([
       "js/utils/helper-utils.js",
       "js/components/extension.js",
       "js/components/preferences.js",
-      "js/components/modal.js",
+      // "js/components/modal.js",
       "js/components/clipboard-component.js",
       "js/require/lsdb.js",
     ],
@@ -74,11 +89,12 @@ app.loadFiles([
       "js/uis/file-tab-ui.js",
       "js/uis/tree-explorer-ui.js",
       "js/components/notif-component.js",
-      "js/components/notifier.js",
+      // "js/components/notifier.js",
       `${ACE_CDN_BASEPATH}/ace.js`,
       "js/components/file-tab-component.js",
       "assets/js/packages/@isomorphic-git/lightning-fs/lightning-fs.min.js",
       "assets/js/packages/isomorphic-git/index.umd.min.js",
+      "js/libs/data-server.js",
     ],
     callback: function() {
       compoPreview.Init(),
@@ -92,13 +108,40 @@ app.loadFiles([
   },
   {
     urls: [
+      "js/factories/structured-data-factory.js",
+      "js/factories/object-data-factory.js",
+      "js/components/app-data-component.js",
+      "js/utils/storage-util.js",
+    ],
+  },
+  {
+    urls: [
+      "js/servers.js",
+    ],
+  },
+  {
+    urls: [
       "js/components/session-manager-component.js",
-      "js/dom-events.js",
-      "css/file-tree.css",
       "js/components/file-tree-component.js",
     ],
-    callback: function() {
+    callback: async function() {
+
+      let dbName = 'codetmp7-v2-db';
+      let dbVersion = 1;
+      
+      await storageUtil.Init(dbName, dbVersion);
+
+      // # data, # server
+      {
+        compoAppData.Configure({
+          'user-preferences': servUserPreferences,
+          'files': servFiles,
+        });
+        await compoAppData.Init_();
+      }
+
       ui.Init();
+      // DOMEvents.Listen(eventsMap)
     },
   },
   {
@@ -111,7 +154,7 @@ app.loadFiles([
     ],
     callback: function() {
       compoSnippet.InitAsync();
-      compoFileReader.init();
+      // compoFileReader.init();
       compoKeyInput.Init();
       ui.InitFileHandler();
     },

@@ -18,7 +18,7 @@ const compoKeyInput = (function() {
     keyboard.isBlocked = function() {
       return compoStateManager.isState(1);
     }
-    keyboard.listen(DOMEvents.eventsMap.keyboardShortcuts);
+    keyboard.listen(eventsMapOld.keyboardShortcuts);
   }
 
   function keyEscape() {
@@ -116,6 +116,8 @@ const compoKeyInput = (function() {
   }
 
   function Init() {
+    return;
+    
     this.listenCombinationKeys();
     let handler = this.environmentKeyEventHandler.bind(this);
     window.addEventListener('blur', handler);

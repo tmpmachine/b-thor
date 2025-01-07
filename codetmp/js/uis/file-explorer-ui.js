@@ -136,29 +136,27 @@ let uiFileExplorer = (function() {
     });
   }
 
-  function newFile() {
+  async function newFile() {
     if (!$('#in-my-files').classList.contains('active')) {
       ui.openNewTab();
       return;
     }
-    
-    modal.prompt('File name', 'Untitled').then(async (name) => {
-      if (!name) 
-        return;
-      let file = await fileManager.CreateFile({
-          name: await fileManager.getDuplicateName(activeFolder, name),
-          modifiedTime: new Date().toISOString(),
-          content: '',
-      });
-      commit({
-        fid: file.fid,
-        action: 'create',
-        type: 'files',
-      });
-      uiFileExplorer.ClearFileSelection();
-      uiTreeExplorer.AppendFile(file);
 
+    let userVal = await windog.prompt('File name', 'Untitled');
+    if (userVal === null) return;
+
+    let file = await fileManager.CreateFile({
+        name: await fileManager.getDuplicateName(activeFolder, name),
+        modifiedTime: new Date().toISOString(),
+        content: '',
     });
+    commit({
+      fid: file.fid,
+      action: 'create',
+      type: 'files',
+    });
+    uiFileExplorer.ClearFileSelection();
+    uiTreeExplorer.AppendFile(file);
   }
   
   function confirmDeletion(message) {

@@ -200,15 +200,19 @@ const compoFileTab = (function() {
   }
 
   
-  function ConfirmCloseTab(focus = true, comeback) {
+  async function ConfirmCloseTab(focus = true, comeback) {
     if (focus) {
       if ($$('.file-tab')[activeTab].querySelector('.icon-rename').textContent.trim() != 'close') {
-          modal.confirm('Changes you made will be lost.').then(() => {
+          let isConfirm = await windog.confirm('Changes you made will be lost. Close the tab?');
+          
+          if (isConfirm) {
             changeFocusTab(focus, comeback);
-          }).catch(() => fileTab[activeTab].editor.env.editor.focus())
+          } else {
+            fileTab[activeTab].editor.env.editor.focus()
+          }
         } else {
           changeFocusTab(focus, comeback);
-        } 
+        }
     } else {
       closeActiveTab()
     }

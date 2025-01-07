@@ -1,0 +1,208 @@
+  /* # base, # default */
+  body {
+      & {
+        color: white;
+        background: black;
+      }
+
+      hr:not(.skin){
+        opacity: 0.3;
+      }
+    
+      /* # button */
+      button:not(.skin) {
+        padding: 0.65rem 1.1rem;
+        border-radius: 0.25rem;
+      }
+      & > :not(dialog) button:not(.skin){
+        &{
+          color: white;
+          border: 1px solid #616161;
+        }
+        &:active{
+          background: #535353;
+        }
+        &{
+          background: #252525;
+        }
+      }
+      dialog button:not(.skin){
+        &{
+          color: #272727;
+          border:0;
+        }
+        &:active{
+          background: #d7d7d7;
+        }
+        &{
+          background: #e4e4e4;
+        }
+      }
+  }
+
+
+/* # windog */
+.wg-windog {
+  & {
+    --sec: 250ms;
+  }
+  
+  & {
+    transition: display var(--sec) allow-discrete, overlay var(--sec) allow-discrete, opacity var(--sec);
+    padding: 0;
+    background: transparent;
+    border: 0;
+    overflow: hidden;
+    height: 100%;
+    /* display: flex; */
+    width: 100%;
+  }
+  &:not(.transitionless)::backdrop {
+    transition: opacity var(--sec);
+    opacity: 0;
+  }
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .inner {
+    height: 100%;
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+  }
+  .wrapper {
+   &{
+    transition: opacity var(--sec), transform var(--sec);
+    opacity: 0;
+    transform: scale(0.95);
+    min-width: 360px;
+    overflow: auto;
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
+    position: relative;
+  }
+    &:not([class*="skin"]) {
+      border: 3px solid;
+      border-radius: 0.4rem;
+      background: white;
+      padding: 1rem;
+    }
+    
+    &.varian-h100 {
+      height: 100%;
+    }
+    &.varian-flex{
+      &{
+        display: flex;
+        flex-direction: column;
+      }
+      .body{
+        flex: 1;
+        overflow: auto;
+      }
+    }
+  }
+  &[open] .wrapper {
+    & {
+      transform: scale(1);
+      opacity: 1;
+    }
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+  &[open] {
+    &{
+      /* overflow: hidden;
+      height: 100%;
+      display: flex; */
+    }
+    &::backdrop {
+      opacity: 1;
+    }
+    @starting-style {
+      &::backdrop{
+        opacity: 0;
+      }
+    }
+  }
+  .backdrop {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+  button:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+  }
+}
+
+
+/* # views */
+body > [data-view-name] {
+    &{
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+    }
+    & > .inner {
+        transition: 150ms;
+        overflow: auto;
+        height: inherit;
+    }  
+    &[data-hidden] > .inner{
+        transform: translateX(8px);
+        opacity: 0;
+    } 
+}
+
+.skin-dialog-settings {
+  &{
+    border-radius: 0.7rem;
+    background: #202125;
+    padding: 0rem;
+    color: #ffffff;
+  }
+
+  .Header {
+  		background:#313235;
+  		padding:8px 16px;
+  	}
+  	.Header {
+  		display: flex;
+  		background:#313235;
+  		padding:8px 0 8px 16px;    display: flex;
+	    justify-content: space-between;
+	    align-items: center;
+  	}
+  	.title {
+  		text-transform: uppercase;
+  		font-size: 14px;
+  		font-weight: bold;
+  	}
+  
+  .close-btn {
+  border: 0;
+  background: none;
+  transition: 250ms;
+  cursor: pointer;
+  width: 41px;
+  color:#aaa;
+}
+.close-btn:hover {
+  color: #d2d2d2;
+}
+.close-btn:active {
+  color: #fff;
+}
+.close-btn:focus {
+  outline-color: #e91e63;
+}
+}
